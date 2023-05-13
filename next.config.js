@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  sassOptions: {
-    additionalData: `@use "@yanglee2421/scss/src" as *;`,
+  reactStrictMode: true, // Recommended for the `pages` directory, default in `app`.
+  experimental: {
+    // Required:
+    appDir: true,
   },
 };
 
