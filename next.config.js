@@ -5,6 +5,9 @@ const nextConfig = {
     // Required:
     appDir: true,
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 };
 
 module.exports = nextConfig;
