@@ -13,6 +13,7 @@ export default function RootLayout(props: RootLayoutProps) {
         <title>Next.js Turbopack App Directory Playground</title>
       </head>
       <body>
+        <h1>main layout</h1>
         <ReactQuery>{children}</ReactQuery>
       </body>
     </html>
