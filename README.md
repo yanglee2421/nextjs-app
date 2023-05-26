@@ -1,24 +1,19 @@
-# Next.js + Turbopack App Directory Playground
+# Nestjs
 
-[Turbopack](https://turbo.build/pack) is a new incremental bundler optimized for JavaScript and TypeScript, written in Rust by the creators of Webpack and Next.js at [Vercel](https://vercel.com). On large applications Turbopack updates 10x faster than Vite and 700x faster than Webpack ([benchmark](https://turbo.build/pack/docs/benchmarks)). For the biggest applications the difference grows even more stark with updates up to 20x faster than Vite.
+## SSR &SPA
 
-This playground is a mirror of the [Next.js v13 App Directory Playground](https://github.com/vercel/app-playground), but uses Turbopack as the Next.js development server (`next dev --turbo`).
-
-**As a reminder, Turbopack is currently in beta and not yet ready for production. We appreciate your ongoing support as we work to make it ready for everyone.**
-
-## Running Locally
-
-1. Install dependencies: `yarn`
-1. Start the dev server: `yarn dev`
-
-**Note:** The playground uses [Tailwind CSS](https://tailwindcss.com) via [PostCSS](https://turbo.build/pack/docs/features/css#postcss).
-
-For more information, see: https://turbo.build/pack/docs/features/css#tailwind-css
-
-## Documentation
-
-https://nextjs.link/with-turbopack
-
-## Providing Feedback
-
-https://nextjs.link/turbopack-feedback
+1. 服务端组件
+   - 允许一个 async 函数作为 react 组件
+   - 组件函数在服务器执行
+   - 使用 client 组件时，需要使用 use client 显式声明
+2. http 请求
+   - 允许在中 SSR server 中向 API server 发送 http 请求
+3. \_app.tsx（仅 pages 路由）
+   - 替代 SPA 中的 App.tsx
+   - 用途如：redux、react-query
+4. fetch 的特有 API
+   - 使用 next 属性缓存请求
+5. 路由
+   - 使用 next/navigation 模块在 server components 进行重定向
+   - app Route 下：使用 app/not-found.tsx 自定义 404
+   - pages Route 下：使用 pages/404.tsx 自定义 404
