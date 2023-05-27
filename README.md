@@ -1,6 +1,6 @@
 # Nestjs
 
-## SSR &SPA
+## SSR & SPA
 
 1. 服务端组件
    - 允许一个 async 函数作为 react 组件
@@ -18,3 +18,51 @@
    - 使用 next/navigation 模块在 server components 进行重定向
    - app Route 下：使用 app/not-found.tsx 自定义 404
    - pages Route 下：使用 pages/404.tsx 自定义 404
+
+## pages route
+
+1. 文件路由
+   - pages/index.tsx
+   - pages/todos/index.tsx
+   - pages/404.tsx
+   - pages/\_app.tsx
+2. 动态路由
+   - [id].tsx
+   - [...uris].tsx
+3. hooks
+
+```js
+import { useRouter } from 'next/router';
+const router = useRouter();
+// Get params & searchParams
+router.query;
+// Programmatic routing navigation
+router.push('/');
+router.replace({
+  pathname: '/[id]',
+  query: { id: 123 },
+});
+```
+
+4. Link
+
+```jsx
+import Link from 'next/link';
+
+function Component() {
+  return (
+    <>
+      <Link href="/" passHref>
+        click me
+      </Link>
+      <Link href={{ pathname: '/[id]', query: { id: 123 } }} passHref>
+        click me
+      </Link>
+    </>
+  );
+}
+```
+
+## data prepared
+
+- getStaticProps
