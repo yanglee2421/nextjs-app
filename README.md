@@ -120,87 +120,85 @@ function Component() {
 ### getStaticProps & getStaticPaths
 
 ~~~tsx
-import {useRouter} from 'next/router';
-import Link from 'next/link';
-import {get_bing} from '@/api';
+import type {
+  InferGetStaticPropsType,
+  GetStaticProps,
+  GetStaticPaths,
+} from "next";
 
-interface Props {
-  data: any;
-}
+type Props = InferGetStaticPropsType<typeof getStaticProps>;
 
-export default function Id(props: Props) {
-  const router = useRouter();
-
-  const handleClick = () => {
-    router.push({pathname: '/'});
-    router.replace('/404');
-  };
-
-  return (
-    <>
-      id
-      <Link href={{pathname: '/demo/23', query: {id: 123}}} passHref>
-        click me
-      </Link>
-      <button onClick={handleClick}>take me home</button>
-      <p>{JSON.stringify(props)}</p>
-    </>
-  );
-}
-
-interface Cnt {
-  params?: any;
-  locales: undefined;
-  locale: undefined;
-  defaultLocale: undefined;
-}
-
-// Get server side props & generate html
-export async function getStaticProps(cnt: Cnt) {
-  const {params} = cnt;
-
-  try {
-    const data = await get_bing({n: params.id || 0});
-    return {props: {data}, revalidate: 60 * 60 * 24};
-  } catch {
-    return {notFound: true};
-  }
-}
-
-interface Path {
-  params: {id: string};
+export default function Page(props: Props) {
+  const { name } = props;
+  // returns null
+  return <></>;
 }
 
 // Required for dynamic routing
-export async function getStaticPaths() {
-  const paths: Path[] = [];
-  for (let i = 0; i < 9; i++) {
-    paths.push({params: {id: String(i)}});
-  }
-
+export const getStaticPaths: GetStaticPaths = async () => {
   return {
-    paths,
-    fallback: false || 'blocking'
+    paths: [
+      "/demo/1",
+      {
+        params: { id: "2" },
+      },
+    ],
+    fallback: false,
   };
+};
+
+interface TData {
+  name: unknown;
 }
+
+// Get server side props & generate html
+export const getStaticProps: GetStaticProps<TData> = async () => {
+  try {
+    await get_demo();
+    return { props: { name: null }, revalidate: 60 * 60 * 24 };
+  } catch {
+    return {
+      redirect: {
+        statusCode: 301,
+        destination: "/demo",
+      },
+    };
+  }
+};
+
+async function get_demo() {}
+
 ~~~
 
 ### getServerSideProps
 
 ~~~tsx
-interface Props {
-  usr: string;
-}
+import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 
-export default function Id(props: Props) {
-  console.log(props.usr);
+type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+export default function Page(props: Props) {
+  const { data } = props;
+  // returns null
   return <></>;
 }
 
-// Get server side props, but will not generate html
-export async function getServerSideProps() {
-  return {props: {usr: 'max'}};
+interface TData {
+  data: unknown;
 }
+
+// Get server side props, but doesn't generate html
+export const getServerSideProps: GetServerSideProps<TData> = async () => {
+  try {
+    await get_demo();
+    return { props: { data: null } };
+  } catch {
+    return { notFound: true };
+  }
+};
+
+async function get_demo() {}
+
 ~~~
 
 __NOTE:__ getServerSideProps 和 getStaticProps中，同一页面只能选择其中一个。
@@ -209,7 +207,11 @@ __NOTE:__ getServerSideProps 和 getStaticProps中，同一页面只能选择其
 
 基本与React App一致，但需要注意，与React App不同，由于页面跳转时会清空JS内存，页面间共享数据时需要使用持久化方案。
 
+### useEffect
+
+NextJs支持在组件中通过useEffect钩子在client side发起网络请求
+
 ### SWR
 
-这是一个由NextJs官方提供的网络请求库，类似react-query，也可以直接使用react-query。
+[SWR](https://swr.vercel.app)一个由NextJs官方提供的用于client side data fetching的网络请求库，类似react-query，也可以直接使用react-query。
 
