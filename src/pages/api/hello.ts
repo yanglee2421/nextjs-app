@@ -9,6 +9,6 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  if (req.method?.toLocaleLowerCase() !== "get") return;
+  if (req.method?.toLowerCase() !== "get") return;
   res.status(200).json({ name: "John Doe" });
 }
