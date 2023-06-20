@@ -20,9 +20,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Res>
 ) {
-  if (req.method?.toLowerCase() !== "post") return;
-
   try {
+    const isNotPost = req.method?.toLowerCase() !== "post";
+    if (isNotPost) throw new Error("not allowed method");
+
     const { fields, files } = await toParse(req);
     const { file } = files;
     const f = Array.isArray(file) ? file.at(0) : file;
