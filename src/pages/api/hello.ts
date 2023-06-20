@@ -6,6 +6,7 @@ import formidable, { Fields, Files } from "formidable";
 
 // NodeJs Imports
 import { readFile } from "node:fs/promises";
+import { IncomingMessage } from "node:http";
 
 // Disabled the default body parser in NextJs
 export const config: PageConfig = { api: { bodyParser: false } };
@@ -22,30 +23,32 @@ export default async function handler(
   if (req.method?.toLowerCase() !== "post") return;
 
   try {
-    const form = formidable();
-
-    const { fields, files } = await new Promise<FormValues>(
-      (resolve, reject) => {
-        form.parse(req, (err, fields, files) => {
-          if (err) return reject(err);
-          return resolve({ fields, files });
-        });
-      }
-    );
-
+    const { fields, files } = await toParse(req);
     const { file } = files;
-    const f = Array.isArray(file) ? file[0] : file;
+    const f = Array.isArray(file) ? file.at(0) : file;
+    if (!f) throw new Error("invalid file");
+
     const buffer = await readFile(f.filepath);
     const data = buffer.toString("base64");
 
     return res.status(200).json({ data, fields });
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
-    return res.status(500).send({ data: "Error" });
+    return res.status(500).send({ data: error.message });
   }
 }
 
 interface FormValues {
   fields: Fields;
   files: Files;
+}
+// Parse Form
+function toParse(req: IncomingMessage) {
+  const form = formidable();
+  return new Promise<FormValues>((resolve, reject) => {
+    form.parse(req, (err, fields, files) => {
+      if (err) return reject(err);
+      return resolve({ fields, files });
+    });
+  });
 }
