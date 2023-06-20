@@ -39,10 +39,6 @@ export default async function handler(
   }
 }
 
-interface FormValues {
-  fields: Fields;
-  files: Files;
-}
 // Parse Form
 function toParse(req: IncomingMessage) {
   const form = formidable();
@@ -52,4 +48,8 @@ function toParse(req: IncomingMessage) {
       return resolve({ fields, files });
     });
   });
+}
+interface FormValues {
+  fields: Fields;
+  files: Files;
 }
