@@ -1,8 +1,18 @@
+// NextJs Imports
 import { Inter } from "next/font/google";
-import styles from "@/styles/Home.module.scss";
+import { GetServerSideProps } from "next";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
-  return <main className={`${styles.main} ${inter.className}`}>Home</main>;
+export default function Home(props: any) {
+  console.log(props);
+
+  return <main className={inter.className}>Home</main>;
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const num = Math.random() * 10;
+  console.log(num);
+  if (num > 7) throw new Error("test");
+  return { props: { num } };
+};
